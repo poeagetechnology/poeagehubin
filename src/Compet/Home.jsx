@@ -13,7 +13,6 @@ import {
   Sparkles,
   Zap,
   BadgeCheck,
-  PackageCheck,
   ChevronRight,
 } from "lucide-react";
 
