@@ -15,6 +15,7 @@ import {
   BadgeCheck,
   ChevronRight,
 } from "lucide-react";
+import { useStore } from "../context/StoreContext";
 
 const categories = [
   {
@@ -172,42 +173,35 @@ const benefits = [
 
 export default function Home() {
   const [activeCategory, setActiveCategory] = useState("All");
-  const [cart, setCart] = useState([]);
-  const [wishlist, setWishlist] = useState([]);
   const [notice, setNotice] = useState("");
+  const { cart, cartCount, wishlist, catalogProducts, addToCart: addProductToCart, toggleWishlist: toggleSavedProduct } = useStore();
+  const allProducts = useMemo(
+    () => [
+      ...products.flatMap((product) => {
+        const catalogProduct = catalogProducts.find((item) => item.id === product.id);
+        return catalogProduct ? [{ ...product, ...catalogProduct }] : [];
+      }),
+      ...catalogProducts.filter((product) => String(product.id).startsWith("seller-")),
+    ],
+    [catalogProducts]
+  );
 
   const filteredProducts = useMemo(
     () =>
       activeCategory === "All"
-        ? products
-        : products.filter((product) => product.category === activeCategory),
-    [activeCategory]
+        ? allProducts
+        : allProducts.filter((product) => product.category === activeCategory),
+    [activeCategory, allProducts]
   );
 
-  const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
-
   const addToCart = (product) => {
-    setCart((current) => {
-      const existing = current.find((item) => item.id === product.id);
-      if (existing) {
-        return current.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      }
-      return [...current, { ...product, quantity: 1 }];
-    });
+    addProductToCart(product);
     setNotice(`${product.name} added to your demo cart.`);
   };
 
   const toggleWishlist = (product) => {
-    const isSaved = wishlist.includes(product.id);
-    setWishlist((current) =>
-      isSaved
-        ? current.filter((id) => id !== product.id)
-        : [...current, product.id]
-    );
+    const isSaved = wishlist.some((item) => item.id === product.id);
+    toggleSavedProduct(product);
     setNotice(
       isSaved
         ? `${product.name} removed from your wishlist.`
@@ -404,7 +398,7 @@ export default function Home() {
 
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 lg:grid-cols-4">
           {filteredProducts.map((product) => {
-            const isWishlisted = wishlist.includes(product.id);
+            const isWishlisted = wishlist.some((item) => item.id === product.id);
             const isInCart = cart.some((item) => item.id === product.id);
 
             return (

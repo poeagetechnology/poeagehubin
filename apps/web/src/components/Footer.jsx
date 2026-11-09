@@ -40,6 +40,16 @@ const footerGroups = [
       ["Terms & Conditions", "/terms"],
     ],
   },
+  {
+    title: "Marketplace",
+    links: [
+      ["Seller Centre", "/seller/dashboard"],
+      ["Delivery Partner", "/delivery/dashboard"],
+      ["Join Delivery Fleet", "/delivery/register"],
+      ["Admin Demo", "/admin/dashboard"],
+      ["Customer Management", "/management/users"],
+    ],
+  },
 ];
 
 const trustItems = [
@@ -124,7 +134,7 @@ export default function Footer() {
       </div>
 
       {/* Main Footer */}
-      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 py-12 sm:px-6 md:grid-cols-2 lg:grid-cols-5 lg:px-8">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 py-12 sm:px-6 md:grid-cols-2 lg:grid-cols-6 lg:px-8">
 
         {/* Brand */}
         <div className="lg:col-span-2">

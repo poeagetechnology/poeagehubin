@@ -1,15 +1,24 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Search, SlidersHorizontal } from "lucide-react";
 import ProductCard from "./ProductCard";
-import { categories, products } from "../data/products";
+import { categories } from "../data/products";
+import { useStore } from "../context/StoreContext";
 
 export default function CatalogPage({ title, subtitle, mode = "all" }) {
-  const [query, setQuery] = useState("");
-  const [category, setCategory] = useState("All");
+  const { catalogProducts } = useStore();
+  const [searchParams] = useSearchParams();
+  const [query, setQuery] = useState(searchParams.get("search") || "");
+  const [category, setCategory] = useState(searchParams.get("category") || "All");
   const [sort, setSort] = useState("featured");
 
+  useEffect(() => {
+    setQuery(searchParams.get("search") || "");
+    setCategory(searchParams.get("category") || "All");
+  }, [searchParams]);
+
   const shownProducts = useMemo(() => {
-    let list = [...products];
+    let list = [...catalogProducts];
     if (mode === "new") list = list.filter((p) => p.tag === "NEW" || p.createdAt >= "2026-11-06");
     if (mode === "best") list = list.filter((p) => p.tag === "BEST SELLER" || p.rating >= 4.8);
     if (mode === "offers") list = list.filter((p) => p.oldPrice > p.price);
@@ -19,7 +28,7 @@ export default function CatalogPage({ title, subtitle, mode = "all" }) {
     if (sort === "price-high") list.sort((a, b) => b.price - a.price);
     if (sort === "rating") list.sort((a, b) => b.rating - a.rating);
     return list;
-  }, [mode, category, query, sort]);
+  }, [mode, category, query, sort, catalogProducts]);
 
   return (
     <main className="min-h-screen bg-slate-50">
@@ -51,14 +60,14 @@ export default function CatalogPage({ title, subtitle, mode = "all" }) {
 
         <div className="mb-5 flex items-center justify-between">
           <p className="text-sm font-semibold text-slate-700">{shownProducts.length} products</p>
-          <p className="text-xs text-slate-400">Sample catalogue</p>
+          <p className="text-xs text-slate-400">Demo catalogue</p>
         </div>
         {shownProducts.length ? (
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 lg:grid-cols-4">{shownProducts.map((product) => <ProductCard key={product.id} product={product} />)}</div>
         ) : (
           <div className="rounded-2xl border border-dashed border-slate-300 bg-white py-16 text-center"><p className="font-bold text-slate-700">No products found</p><p className="mt-2 text-sm text-slate-500">Try another search or category.</p><button onClick={() => { setQuery(""); setCategory("All"); }} className="mt-4 text-sm font-bold text-blue-600">Clear filters</button></div>
         )}
-        <p className="mt-6 text-xs text-slate-400">Demo catalogue. Connect the product API for live stock, pricing, seller details and order processing.</p>
+        <p className="mt-6 text-xs text-slate-400">Demo catalogue. Connect a product API for live stock, pricing, seller details and order processing.</p>
       </section>
     </main>
   );

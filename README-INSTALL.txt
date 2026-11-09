@@ -1,46 +1,22 @@
-POEAGE RESPONSIVE CUSTOMER STOREFRONT PAGES
+POEAGE E-COM DEVELOPMENT SETUP
 
-Included:
-- Responsive Header with navigation links:
-  Home, Shop, Categories, New Arrivals, Best Sellers, Offers
-- Desktop navigation and mobile horizontally-scrollable navigation
-- Mobile menu with search and account link
-- Shop page with search, category filter and sorting
-- Categories page
-- New Arrivals page
-- Best Sellers page
-- Offers page
-- Shared responsive ProductCard and sample product data
-- App.jsx routes
+Requirements: Node.js 20+, npm, PostgreSQL 16+.
 
-Install dependencies:
-npm install
-npm install lucide-react react-router-dom
+1. Run npm install from the repository root.
+2. Copy .env.example to .env and set DATABASE_URL.
+3. Start PostgreSQL. Docker users can run:
+   docker compose up -d postgres
+4. Run:
+   npm run db:migrate
+   npm run db:generate
+   npm run db:seed
+5. In separate terminals, run:
+   npm run dev:web
+   npm run dev:api
+6. Open http://localhost:5173.
 
-Integration:
-1. Copy the contents of this package's src/ folder into your existing project's src/ folder.
-2. Keep your existing src/Compet/Home.jsx (the completed homepage component).
-3. Keep your existing src/layouts/MainLayout.jsx and ensure it renders <Header />, <Outlet /> and <Footer />.
-4. Replace src/components/Header.jsx with the included Header.jsx.
-5. Replace src/App.jsx with the included App.jsx.
-6. Ensure src/main.jsx wraps <App /> in <BrowserRouter>.
-7. Merge the included index.css rules into your existing src/index.css if needed.
+See README.md and docs/ for architecture, API plan, database design, security,
+testing, roadmap and deployment.
 
-Expected existing project paths:
-src/Compet/Home.jsx
-src/layouts/MainLayout.jsx
-src/components/Footer.jsx
-
-If your existing logo is at src/Asset/2.png, copy it to public/logo.png to use the logo location referenced by Header.jsx.
-Alternatively, change the image src in Header.jsx to your preferred logo import/path.
-
-Run:
-npm run dev
-
-Notes:
-- The product catalogue is demo data in src/data/products.js.
-- Cart and wishlist buttons on listing cards currently show local demo feedback only.
-- Search, filters and sorting work on the sample product list.
-- Backend, MongoDB, user authentication, persistent cart/wishlist, payment and live inventory are not connected.
-- Product links currently route to a placeholder Product details page.
-- The header uses React Router NavLink and Link.
+The storefront and management flows currently remain browser-local prototypes.
+Do not use them to accept real orders or process real personal/payment data.

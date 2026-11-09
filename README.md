@@ -1,70 +1,73 @@
-# Getting Started with Create React App
+# Poeage E-com
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**Every Seller. Every Product. One Marketplace.**
 
-## Available Scripts
+Poeage E-com is being developed as a secure, India-focused, multi-vendor marketplace owned by Poeage Technology Private Limited. The repository is a phased work in progress: Phase 1 establishes the web/API workspaces, database foundation, and engineering documentation. Real authentication, payments, shipping, and shared marketplace operations are not yet implemented.
 
-In the project directory, you can run:
+## Stack
 
-### `npm start`
+- Web: React 19, Vite, Tailwind CSS, React Router, Lucide React, Framer Motion
+- API: Node.js, Express, REST, Zod environment validation
+- Data: PostgreSQL, Prisma ORM
+- Planned integrations: backend-managed JWT sessions, Razorpay, Shiprocket, Cloudinary, email/SMS/WhatsApp
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Development setup
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Requirements: Node.js 20+, npm, PostgreSQL 16+. Docker Compose is optional.
 
-### `npm test`
+```sh
+npm install
+Copy-Item .env.example .env
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Set `DATABASE_URL` in the root `.env`. To run local PostgreSQL with Docker, use `docker compose up -d postgres`. Then run:
 
-### `npm run build`
+```sh
+npm run db:migrate
+npm run db:generate
+npm run db:seed
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Start the web and API in separate terminals:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```sh
+npm run dev:web
+npm run dev:api
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+The web app is served at `http://localhost:5173`; the API listens on `http://localhost:4000`. API health endpoints are `GET /api/v1/health/live` and `GET /api/v1/health/ready`.
 
-### `npm run eject`
+Useful checks:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```sh
+npm run build
+npm test
+npx prisma validate
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+See [deployment setup](./docs/deployment.md) for environments, migrations, and hosting guidance.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Project structure
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```text
+apps/
+  web/                 React customer storefront and current dashboard prototype
+  api/                 Express API and API tests
+prisma/
+  schema.prisma        PostgreSQL/Prisma domain model
+  migrations/          Versioned schema migrations
+  seed.js              Development-only roles, permissions, categories
+docs/                  Architecture, ER diagram, API, security, roadmap, deployment
+```
 
-## Learn More
+## Delivery status and important limitation
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+The existing storefront and management UI remain browser-local prototypes. Phase 1 adds a real API process and database design, but does not yet connect those screens to the API. Do not collect real customer/KYC data, accept orders, or represent payments or shipments as real. Authentication/RBAC, business APIs, payment verification, shipping integrations, and production operational controls must be implemented and tested before launch.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- [Architecture](./docs/architecture.md)
+- [Database ER diagram and integrity notes](./docs/database-erd.md)
+- [API endpoint plan](./docs/api.md)
+- [Security requirements](./docs/security.md)
+- [Testing and verification](./docs/testing.md)
+- [Development roadmap and Phase 1 checklist](./docs/development-roadmap.md)
+- [Deployment instructions](./docs/deployment.md)

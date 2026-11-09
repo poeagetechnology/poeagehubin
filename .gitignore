@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+**/node_modules
 /.pnp
 .pnp.js
 
@@ -10,6 +11,21 @@
 
 # production
 /build
+**/dist
+/apps/web/dist
+/coverage
+
+# secrets and local configuration
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# local database / generated files
+/apps/api/uploads
+/prisma/*.db
 
 # misc
 .DS_Store

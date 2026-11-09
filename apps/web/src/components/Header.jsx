@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink, Link, useNavigate } from "react-router-dom";
 import { Menu, X, Search, ShoppingBag, UserRound, Heart } from "lucide-react";
 import Logo from "../Asset/2.png";
+import { useStore } from "../context/StoreContext";
 
 const navItems = [
   { label: "Home", to: "/" },
@@ -20,11 +21,16 @@ const linkClass = ({ isActive }) =>
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const navigate = useNavigate();
+  const { cartCount } = useStore();
 
   const submitSearch = (event) => {
     event.preventDefault();
     const query = search.trim();
-    if (query) window.location.href = `/shop?search=${encodeURIComponent(query)}`;
+    if (query) {
+      navigate(`/shop?search=${encodeURIComponent(query)}`);
+      setMenuOpen(false);
+    }
   };
 
   return (
@@ -43,7 +49,7 @@ export default function Header() {
 
         <div className="flex shrink-0 items-center gap-1 sm:gap-3">
           <Link to="/wishlist" aria-label="Wishlist" className="hidden rounded-full p-2 text-slate-600 hover:bg-blue-50 hover:text-blue-600 sm:inline-flex"><Heart size={20} /></Link>
-          <Link to="/cart" aria-label="Shopping cart" className="rounded-full p-2 text-slate-600 hover:bg-blue-50 hover:text-blue-600"><ShoppingBag size={20} /></Link>
+          <Link to="/cart" aria-label={`Shopping cart${cartCount ? `, ${cartCount} items` : ""}`} className="relative rounded-full p-2 text-slate-600 hover:bg-blue-50 hover:text-blue-600"><ShoppingBag size={20} />{cartCount > 0 && <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-blue-600 px-1 text-[10px] font-bold text-white">{cartCount}</span>}</Link>
           <Link to="/login" className="hidden items-center gap-2 rounded-full bg-blue-600 px-4 py-2.5 text-xs font-bold text-white hover:bg-blue-700 sm:inline-flex"><UserRound size={16} /> Account</Link>
           <button type="button" onClick={() => setMenuOpen((open) => !open)} aria-label={menuOpen ? "Close menu" : "Open menu"} aria-expanded={menuOpen} className="rounded-lg p-2 text-slate-700 hover:bg-slate-100 md:hidden">
             {menuOpen ? <X size={22} /> : <Menu size={22} />}
